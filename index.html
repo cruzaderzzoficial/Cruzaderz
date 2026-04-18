@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRUZADERZ — Tienda</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root { --black: #080808; --white: #f5f0e8; --red: #cc0000; --gray: #1a1a1a; --muted: #555; --border: #222; }
+  body { background: var(--black); color: var(--white); font-family: 'Barlow', sans-serif; min-height: 100vh; }
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,8,8,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 6px; color: var(--white); text-decoration: none; }
+  .logo span { color: var(--red); }
+  .cart-btn { background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 2px; padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: border-color 0.2s; }
+  .cart-btn:hover { border-color: var(--white); }
+  .cart-count { background: var(--red); color: #fff; font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
+  .hero { margin-top: 64px; padding: 80px 2rem 60px; text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+  .hero::before { content: 'CRZ'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Bebas Neue', sans-serif; font-size: 20vw; color: rgba(255,255,255,0.02); pointer-events: none; letter-spacing: 20px; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem,8vw,7rem); letter-spacing: 12px; line-height: 1; margin-bottom: 12px; }
+  .hero p { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
+  .filters { display: flex; gap: 12px; padding: 24px 2rem; border-bottom: 1px solid var(--border); overflow-x: auto; }
+  .filter-btn { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 2px; padding: 6px 16px; cursor: pointer; white-space: nowrap; transition: all 0.2s; text-transform: uppercase; }
+  .filter-btn:hover, .filter-btn.active { border-color: var(--white); color: var(--white); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1px; background: var(--border); }
+  .product-card { background: var(--black); cursor: pointer; transition: background 0.2s; position: relative; overflow: hidden; }
+  .product-card:hover { background: #0f0f0f; }
+  .product-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top; display: block; filter: grayscale(15%); transition: filter 0.3s, transform 0.4s; }
+  .product-card:hover .product-img { filter: grayscale(0%); transform: scale(1.02); }
+  .product-info { padding: 16px; border-top: 1px solid var(--border); }
+  .product-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
+  .product-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; margin-bottom: 8px; }
+  .product-price { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--white); letter-spacing: 1px; }
+  .product-talle { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; color: var(--muted); letter-spacing: 2px; margin-top: 4px; }
+  .add-btn { width: 100%; margin-top: 12px; background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 3px; padding: 10px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
+  .add-btn:hover { background: var(--white); color: var(--black); border-color: var(--white); }
+  .badge-crz { position: absolute; top: 12px; right: 12px; background: var(--black); border: 1px solid var(--border); font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 2px; padding: 3px 8px; color: var(--muted); z-index: 2; }
+  .badge-propio { background: var(--red); border-color: var(--red); color: #fff; }
+  .cart-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; }
+  .cart-overlay.open { display: block; }
+  .cart-sidebar { position: fixed; top: 0; right: -420px; width: 420px; max-width: 100vw; height: 100vh; background: var(--gray); border-left: 1px solid var(--border); z-index: 201; transition: right 0.3s ease; display: flex; flex-direction: column; }
+  .cart-sidebar.open { right: 0; }
+  .cart-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .cart-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 4px; }
+  .close-btn { background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; line-height: 1; }
+  .close-btn:hover { color: var(--white); }
+  .cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
+  .cart-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
+  .cart-item-img { width: 64px; height: 80px; object-fit: cover; object-position: top; flex-shrink: 0; }
+  .cart-item-info { flex: 1; }
+  .cart-item-name { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; margin-bottom: 4px; }
+  .cart-item-price { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; color: var(--muted); }
+  .cart-item-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; align-self: flex-start; }
+  .cart-item-remove:hover { color: var(--red); }
+  .cart-footer { padding: 20px 24px; border-top: 1px solid var(--border); }
+  .cart-total { display: flex; justify-content: space-between; margin-bottom: 16px; }
+  .cart-total-label { font-family: 'Barlow Condensed', sans-serif; letter-spacing: 2px; color: var(--muted); font-size: 0.85rem; text-transform: uppercase; }
+  .cart-total-amount { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; }
+  .checkout-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 4px; padding: 14px; cursor: pointer; transition: opacity 0.2s; margin-bottom: 10px; }
+  .checkout-btn:hover { opacity: 0.85; }
+  .mp-note { font-family: 'Barlow', sans-serif; font-size: 0.75rem; color: var(--muted); text-align: center; line-height: 1.5; }
+  .empty-cart { text-align: center; padding: 60px 0; color: var(--muted); font-family: 'Barlow Condensed', sans-serif; letter-spacing: 2px; font-size: 0.85rem; text-transform: uppercase; }
+
+  /* MODAL */
+  .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; }
+  .modal-overlay.open { display: block; }
+  .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.95); width: 90%; max-width: 420px; max-height: 80vh; background: var(--gray); border: 1px solid var(--border); z-index: 301; display: flex; flex-direction: column; opacity: 0; transition: all 0.25s ease; pointer-events: none; }
+  .modal.open { opacity: 1; transform: translate(-50%,-50%) scale(1); pointer-events: all; }
+  .modal-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 4px; }
+  .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
+  .modal-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; }
+  .modal-item-name { color: var(--white); }
+  .modal-item-price { color: var(--muted); white-space: nowrap; margin-left: 8px; }
+  .modal-total { display: flex; justify-content: space-between; padding: 14px 0 0; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 2px; }
+  .modal-footer { padding: 16px 20px; border-top: 1px solid var(--border); text-align: center; }
+  .modal-footer .mp-note { margin-bottom: 12px; }
+  .copy-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 4px; padding: 12px; cursor: pointer; transition: all 0.2s; }
+  .copy-btn:hover { opacity: 0.85; }
+  .copy-btn.copied { background: #2a2a2a; color: var(--white); }
+
+  footer { padding: 40px 2rem; border-top: 1px solid var(--border); text-align: center; }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 10px; color: var(--muted); margin-bottom: 12px; }
+  .footer-ig { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+  .footer-ig a { color: var(--white); text-decoration: none; }
+  .notif { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--white); color: var(--black); font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 2px; padding: 12px 24px; z-index: 400; transition: transform 0.3s ease; text-transform: uppercase; }
+  .notif.show { transform: translateX(-50%) translateY(0); }
+  .carousel-wrap { position: relative; overflow: hidden; }
+  .car-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); border: 1px solid var(--border); color: var(--white); font-size: 1rem; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; z-index: 2; }
+  .car-btn:hover { background: rgba(0,0,0,0.9); }
+  .car-prev { left: 8px; }
+  .car-next { right: 8px; }
+  .dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 2; }
+  .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: background 0.2s; }
+  .dot-active { background: var(--white); }
+  @media (max-width: 600px) { .hero h1 { font-size: 3.5rem; } .cart-sidebar { width: 100vw; } .modal { width: 95%; } }
+</style>
+</head>
+<body>
+
+<header>
+  <a class="logo" href="#">CRUZA<span>DERZ</span></a>
+  <button class="cart-btn" onclick="toggleCart()">
+    CARRITO <span class="cart-count" id="cartCount">0</span>
+  </button>
+</header>
+
+<section class="hero">
+  <h1>CATÁLOGO</h1>
+  <p>Streetwear — Envíos a todo el país</p>
+</section>
+
+<div class="filters">
+  <button class="filter-btn active" onclick="filterProducts('todos', this)">TODOS</button>
+  <button class="filter-btn" onclick="filterProducts('remera', this)">REMERAS</button>
+  <button class="filter-btn" onclick="filterProducts('chomba', this)">CHOMBAS</button>
+  <button class="filter-btn" onclick="filterProducts('jean', this)">JEANS</button>
+  <button class="filter-btn" onclick="filterProducts('buzo', this)">BUZOS</button>
+</div>
+
+<div class="grid" id="productGrid"></div>
+
+<div class="cart-overlay" id="cartOverlay" onclick="toggleCart()"></div>
+<div class="cart-sidebar" id="cartSidebar">
+  <div class="cart-header">
+    <span class="cart-title">TU CARRITO</span>
+    <button class="close-btn" onclick="toggleCart()">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems"></div>
+  <div class="cart-footer">
+    <div class="cart-total">
+      <span class="cart-total-label">Total</span>
+      <span class="cart-total-amount" id="cartTotal">$0</span>
+    </div>
+    <button class="checkout-btn" onclick="checkout()">VER RESUMEN</button>
+    <p class="mp-note">Para comprar escribinos por DM en Instagram:<br><strong>@cruzaderz.oficial</strong><br>Pagás por Mercado Pago o transferencia.</p>
+  </div>
+</div>
+
+<div class="modal-overlay" id="modalOverlay" onclick="closeModal()"></div>
+<div class="modal" id="modal">
+  <div class="modal-header">
+    <span class="modal-title">TU PEDIDO</span>
+    <button class="close-btn" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-body" id="modalBody"></div>
+  <div class="modal-footer">
+    <p class="mp-note">Copiá tu pedido y mandalo por DM a<br><strong style="color:#f5f0e8">@cruzaderz.oficial</strong> en Instagram.<br>Pagás por Mercado Pago o transferencia.</p>
+    <button class="copy-btn" id="copyBtn" onclick="copyResumen()">COPIAR PEDIDO</button>
+  </div>
+</div>
+
+<div class="notif" id="notif"></div>
+
+<footer>
+  <div class="footer-logo">CRZ</div>
+  <p class="footer-ig">Instagram: <a href="https://instagram.com/cruzaderz.oficial" target="_blank">@cruzaderz.oficial</a></p>
+</footer>
+
+<script>
+const products = [
+  { id:1, name:"Remera Tripside", category:"remera", price:26999, talle:"M / L", imgs:["remera tripside.jpeg","remera tripside 2.jpeg","remera tripside 3.jpeg"], propio:false },
+  { id:2, name:"Chomba Skyline", category:"chomba", price:25999, talle:"L", imgs:["chomba skyline 1.jpeg","chomba skyline 2.jpeg","chomba skyline 3.jpeg"], propio:false },
+  { id:3, name:"Chomba Duo", category:"chomba", price:25999, talle:"L", imgs:["chomba duo 1.jpeg","chomba duo 2.jpeg"], propio:false },
+  { id:4, name:"Chomba Bull", category:"chomba", price:26999, talle:"L", imgs:["chomba bull 1.jpeg","chomba bull 2.jpeg","chomba bull 3.jpeg"], propio:false },
+  { id:5, name:"Chomba Triple Double", category:"chomba", price:26999, talle:"XL", imgs:["triple double 1.png","triple double 2.png","triple double 3.png"], propio:false },
+  { id:6, name:"Remera Street Marrón", category:"remera", price:28999, talle:"L", imgs:["remera street marron 3.jpeg"], propio:false },
+  { id:7, name:"Remera Perla", category:"remera", price:28999, talle:"XL", imgs:["perla 1.PNG","perla2.PNG","perla3.PNG"], propio:false },
+  { id:8, name:"Jean Baggy Washed", category:"jean", price:40999, talle:"44 / 46", imgs:["baggy washed 1.jpeg","baggy washed 2.jpeg","baggy washed 3.jpeg"], propio:false },
+  { id:9, name:"Jean Baggy Gravity", category:"jean", price:42999, talle:"44 / 46", imgs:["baggy gravity 1.jpeg","baggy gravity 2.jpeg","baggy gravity 3.jpeg"], propio:false },
+  { id:10, name:"Buzo Cruzaderz", category:"buzo", price:40000, talle:"L mujer / M hombre", imgs:["buzo cruzaderz 1.png","buzo cruzadez 2.png"], propio:true }
+];
+
+let cart = [], currentFilter = 'todos', carouselIndex = {}, resumenTexto = '';
+
+function formatPrice(p) { return '$' + p.toLocaleString('es-AR'); }
+
+function prevImg(id, total, e) { e.stopPropagation(); carouselIndex[id] = (carouselIndex[id] - 1 + total) % total; updateCarousel(id); }
+function nextImg(id, total, e) { e.stopPropagation(); carouselIndex[id] = (carouselIndex[id] + 1) % total; updateCarousel(id); }
+
+function updateCarousel(id) {
+  const img = document.getElementById('img-' + id);
+  const p = products.find(x => x.id === id);
+  img.src = p.imgs[carouselIndex[id]];
+  document.querySelectorAll('.dot-' + id).forEach((d, i) => d.classList.toggle('dot-active', i === carouselIndex[id]));
+}
+
+function renderProducts(filter) {
+  const grid = document.getElementById('productGrid');
+  const filtered = filter === 'todos' ? products : products.filter(p => p.category === filter);
+  grid.innerHTML = filtered.map(p => {
+    carouselIndex[p.id] = carouselIndex[p.id] || 0;
+    const multi = p.imgs.length > 1;
+    const dots = p.imgs.map((_, i) => `<span class="dot dot-${p.id} ${i===0?'dot-active':''}"></span>`).join('');
+    return `<div class="product-card">
+      <span class="badge-crz ${p.propio?'badge-propio':''}">${p.propio?'CRUZADERZ':'REVENTA'}</span>
+      <div class="carousel-wrap">
+        <img class="product-img" id="img-${p.id}" src="${p.imgs[0]}" alt="${p.name}" loading="lazy"/>
+        ${multi?`<button class="car-btn car-prev" onclick="prevImg(${p.id},${p.imgs.length},event)">&#8592;</button>
+        <button class="car-btn car-next" onclick="nextImg(${p.id},${p.imgs.length},event)">&#8594;</button>
+        <div class="dots">${dots}</div>`:''}
+      </div>
+      <div class="product-info">
+        <div class="product-tag">${p.category.toUpperCase()}</div>
+        <div class="product-name">${p.name}</div>
+        <div class="product-price">${formatPrice(p.price)}</div>
+        <div class="product-talle">Talle: ${p.talle}</div>
+        <button class="add-btn" onclick="addToCart(${p.id})">AGREGAR AL CARRITO</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterProducts(cat, btn) {
+  currentFilter = cat;
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  renderProducts(cat);
+}
+
+function addToCart(id) {
+  const p = products.find(x => x.id === id);
+  const ex = cart.find(x => x.id === id);
+  if (ex) { ex.qty++; } else { cart.push({...p, qty:1}); }
+  updateCartUI();
+  showNotif(`${p.name} agregado`);
+}
+
+function removeFromCart(id) { cart = cart.filter(x => x.id !== id); updateCartUI(); }
+
+function updateCartUI() {
+  document.getElementById('cartCount').textContent = cart.reduce((a,x) => a+x.qty, 0);
+  document.getElementById('cartTotal').textContent = formatPrice(cart.reduce((a,x) => a+x.price*x.qty, 0));
+  const el = document.getElementById('cartItems');
+  if (!cart.length) { el.innerHTML = '<div class="empty-cart">Tu carrito está vacío</div>'; return; }
+  el.innerHTML = cart.map(x => `<div class="cart-item">
+    <img class="cart-item-img" src="${x.imgs[0]}" alt="${x.name}"/>
+    <div class="cart-item-info">
+      <div class="cart-item-name">${x.name}</div>
+      <div class="cart-item-price">${formatPrice(x.price)} × ${x.qty}</div>
+      <div class="cart-item-price" style="color:#f5f0e8">${formatPrice(x.price*x.qty)}</div>
+    </div>
+    <button class="cart-item-remove" onclick="removeFromCart(${x.id})">✕</button>
+  </div>`).join('');
+}
+
+function toggleCart() {
+  document.getElementById('cartOverlay').classList.toggle('open');
+  document.getElementById('cartSidebar').classList.toggle('open');
+}
+
+function checkout() {
+  if (!cart.length) { showNotif('Tu carrito está vacío'); return; }
+  const total = cart.reduce((a,x) => a+x.price*x.qty, 0);
+  resumenTexto = 'Hola! Quiero comprar de Cruzaderz:\n\n' +
+    cart.map(x => `• ${x.name} (${x.talle}) x${x.qty} — ${formatPrice(x.price*x.qty)}`).join('\n') +
+    `\n\nTotal: ${formatPrice(total)}`;
+  document.getElementById('modalBody').innerHTML =
+    cart.map(x => `<div class="modal-item">
+      <span class="modal-item-name">${x.name} (${x.talle}) ×${x.qty}</span>
+      <span class="modal-item-price">${formatPrice(x.price*x.qty)}</span>
+    </div>`).join('') +
+    `<div class="modal-total"><span>TOTAL</span><span>${formatPrice(total)}</span></div>`;
+  const btn = document.getElementById('copyBtn');
+  btn.textContent = 'COPIAR PEDIDO';
+  btn.classList.remove('copied');
+  document.getElementById('modalOverlay').classList.add('open');
+  document.getElementById('modal').classList.add('open');
+  toggleCart();
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+  document.getElementById('modal').classList.remove('open');
+}
+
+function copyResumen() {
+  navigator.clipboard.writeText(resumenTexto).then(() => {
+    const btn = document.getElementById('copyBtn');
+    btn.textContent = '✓ COPIADO';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = 'COPIAR PEDIDO'; btn.classList.remove('copied'); }, 2500);
+  });
+}
+
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2000);
+}
+
+renderProducts('todos');
+updateCartUI();
+</script>
+</body>
+</html>
