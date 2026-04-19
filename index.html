@@ -2,99 +2,106 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
- <link rel="icon" type="image/ico" href="favicon.ico">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/ico" href="favicon.ico">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>CRUZADERZ — Tienda</title>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Barlow:wght@300;400&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root { --black: #080808; --white: #f5f0e8; --red: #cc0000; --gray: #1a1a1a; --muted: #555; --border: #222; }
+  html, body { width: 100%; overflow-x: hidden; }
   body { background: var(--black); color: var(--white); font-family: 'Barlow', sans-serif; min-height: 100vh; }
-  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,8,8,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 64px; }
-  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 6px; color: var(--white); text-decoration: none; }
+
+  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,8,8,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 4px; color: var(--white); text-decoration: none; }
   .logo span { color: var(--red); }
-  .cart-btn { background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 2px; padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: border-color 0.2s; }
+  .cart-btn { background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 2px; padding: 7px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.2s; white-space: nowrap; }
   .cart-btn:hover { border-color: var(--white); }
-  .cart-count { background: var(--red); color: #fff; font-size: 0.7rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; }
-  .hero { margin-top: 64px; padding: 80px 2rem 60px; text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
-  .hero::before { content: 'CRZ'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Bebas Neue', sans-serif; font-size: 20vw; color: rgba(255,255,255,0.02); pointer-events: none; letter-spacing: 20px; }
-  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(3rem,8vw,7rem); letter-spacing: 12px; line-height: 1; margin-bottom: 12px; }
-  .hero p { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 4px; color: var(--muted); text-transform: uppercase; }
-  .filters { display: flex; gap: 12px; padding: 24px 2rem; border-bottom: 1px solid var(--border); overflow-x: auto; }
-  .filter-btn { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 2px; padding: 6px 16px; cursor: pointer; white-space: nowrap; transition: all 0.2s; text-transform: uppercase; }
+  .cart-count { background: var(--red); color: #fff; font-size: 0.65rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
+
+  .hero { margin-top: 56px; padding: 40px 1rem 30px; text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+  .hero::before { content: 'CRZ'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Bebas Neue', sans-serif; font-size: 30vw; color: rgba(255,255,255,0.02); pointer-events: none; letter-spacing: 10px; }
+  .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 12vw, 6rem); letter-spacing: 6px; line-height: 1; margin-bottom: 8px; }
+  .hero p { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
+
+  .filters { display: flex; gap: 8px; padding: 16px 1rem; border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
+  .filters::-webkit-scrollbar { display: none; }
+  .filter-btn { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 2px; padding: 5px 12px; cursor: pointer; white-space: nowrap; transition: all 0.2s; text-transform: uppercase; flex-shrink: 0; }
   .filter-btn:hover, .filter-btn.active { border-color: var(--white); color: var(--white); }
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1px; background: var(--border); }
+
+  .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); }
+  @media (min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); } }
+
   .product-card { background: var(--black); cursor: pointer; transition: background 0.2s; position: relative; overflow: hidden; }
   .product-card:hover { background: #0f0f0f; }
   .product-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top; display: block; filter: grayscale(15%); transition: filter 0.3s, transform 0.4s; }
   .product-card:hover .product-img { filter: grayscale(0%); transform: scale(1.02); }
-  .product-info { padding: 16px; border-top: 1px solid var(--border); }
-  .product-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; margin-bottom: 4px; }
-  .product-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; margin-bottom: 8px; }
-  .product-price { font-family: 'Barlow Condensed', sans-serif; font-size: 1.1rem; font-weight: 600; color: var(--white); letter-spacing: 1px; }
-  .product-talle { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; color: var(--muted); letter-spacing: 2px; margin-top: 4px; }
-  .add-btn { width: 100%; margin-top: 12px; background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 3px; padding: 10px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
-  .add-btn:hover { background: var(--white); color: var(--black); border-color: var(--white); }
-  .badge-crz { position: absolute; top: 12px; right: 12px; background: var(--black); border: 1px solid var(--border); font-family: 'Bebas Neue', sans-serif; font-size: 0.75rem; letter-spacing: 2px; padding: 3px 8px; color: var(--muted); z-index: 2; }
+  .product-info { padding: 10px; border-top: 1px solid var(--border); }
+  .product-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
+  .product-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 1px; margin-bottom: 4px; line-height: 1.1; }
+  .product-price { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; font-weight: 600; color: var(--white); letter-spacing: 1px; }
+  .product-talle { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
+  .add-btn { width: 100%; margin-top: 8px; background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; letter-spacing: 2px; padding: 8px 4px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
+  .add-btn:active { background: var(--white); color: var(--black); border-color: var(--white); }
+  .badge-crz { position: absolute; top: 8px; right: 8px; background: var(--black); border: 1px solid var(--border); font-family: 'Bebas Neue', sans-serif; font-size: 0.65rem; letter-spacing: 1px; padding: 2px 6px; color: var(--muted); z-index: 2; }
   .badge-propio { background: var(--red); border-color: var(--red); color: #fff; }
+
   .cart-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; }
   .cart-overlay.open { display: block; }
-  .cart-sidebar { position: fixed; top: 0; right: -420px; width: 420px; max-width: 100vw; height: 100vh; background: var(--gray); border-left: 1px solid var(--border); z-index: 201; transition: right 0.3s ease; display: flex; flex-direction: column; }
+  .cart-sidebar { position: fixed; top: 0; right: -100vw; width: 100vw; max-width: 400px; height: 100vh; background: var(--gray); border-left: 1px solid var(--border); z-index: 201; transition: right 0.3s ease; display: flex; flex-direction: column; }
   .cart-sidebar.open { right: 0; }
-  .cart-header { padding: 20px 24px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .cart-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.5rem; letter-spacing: 4px; }
-  .close-btn { background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; line-height: 1; }
+  .cart-header { padding: 16px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
+  .cart-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 4px; }
+  .close-btn { background: none; border: none; color: var(--muted); font-size: 1.5rem; cursor: pointer; line-height: 1; padding: 4px; }
   .close-btn:hover { color: var(--white); }
-  .cart-items { flex: 1; overflow-y: auto; padding: 16px 24px; }
-  .cart-item { display: flex; gap: 12px; padding: 12px 0; border-bottom: 1px solid var(--border); }
-  .cart-item-img { width: 64px; height: 80px; object-fit: cover; object-position: top; flex-shrink: 0; }
-  .cart-item-info { flex: 1; }
-  .cart-item-name { font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 1px; margin-bottom: 4px; }
-  .cart-item-price { font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; color: var(--muted); }
-  .cart-item-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; align-self: flex-start; }
+  .cart-items { flex: 1; overflow-y: auto; padding: 12px 20px; -webkit-overflow-scrolling: touch; }
+  .cart-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
+  .cart-item-img { width: 56px; height: 70px; object-fit: cover; object-position: top; flex-shrink: 0; }
+  .cart-item-info { flex: 1; min-width: 0; }
+  .cart-item-name { font-family: 'Bebas Neue', sans-serif; font-size: 0.9rem; letter-spacing: 1px; margin-bottom: 3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .cart-item-price { font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; color: var(--muted); }
+  .cart-item-remove { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1rem; align-self: flex-start; padding: 2px; flex-shrink: 0; }
   .cart-item-remove:hover { color: var(--red); }
-  .cart-footer { padding: 20px 24px; border-top: 1px solid var(--border); }
-  .cart-total { display: flex; justify-content: space-between; margin-bottom: 16px; }
-  .cart-total-label { font-family: 'Barlow Condensed', sans-serif; letter-spacing: 2px; color: var(--muted); font-size: 0.85rem; text-transform: uppercase; }
-  .cart-total-amount { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 2px; }
-  .checkout-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 4px; padding: 14px; cursor: pointer; transition: opacity 0.2s; margin-bottom: 10px; }
-  .checkout-btn:hover { opacity: 0.85; }
-  .mp-note { font-family: 'Barlow', sans-serif; font-size: 0.75rem; color: var(--muted); text-align: center; line-height: 1.5; }
+  .cart-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+  .cart-total { display: flex; justify-content: space-between; margin-bottom: 12px; }
+  .cart-total-label { font-family: 'Barlow Condensed', sans-serif; letter-spacing: 2px; color: var(--muted); font-size: 0.8rem; text-transform: uppercase; }
+  .cart-total-amount { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 2px; }
+  .checkout-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 3px; padding: 14px; cursor: pointer; transition: opacity 0.2s; margin-bottom: 10px; }
+  .checkout-btn:active { opacity: 0.85; }
+  .mp-note { font-family: 'Barlow', sans-serif; font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.5; }
   .empty-cart { text-align: center; padding: 60px 0; color: var(--muted); font-family: 'Barlow Condensed', sans-serif; letter-spacing: 2px; font-size: 0.85rem; text-transform: uppercase; }
 
-  /* MODAL */
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; }
   .modal-overlay.open { display: block; }
-  .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.95); width: 90%; max-width: 420px; max-height: 80vh; background: var(--gray); border: 1px solid var(--border); z-index: 301; display: flex; flex-direction: column; opacity: 0; transition: all 0.25s ease; pointer-events: none; }
+  .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.95); width: 92%; max-width: 420px; max-height: 85vh; background: var(--gray); border: 1px solid var(--border); z-index: 301; display: flex; flex-direction: column; opacity: 0; transition: all 0.25s ease; pointer-events: none; }
   .modal.open { opacity: 1; transform: translate(-50%,-50%) scale(1); pointer-events: all; }
-  .modal-header { padding: 18px 20px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; }
-  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.3rem; letter-spacing: 4px; }
-  .modal-body { padding: 16px 20px; overflow-y: auto; flex: 1; }
-  .modal-item { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; }
-  .modal-item-name { color: var(--white); }
-  .modal-item-price { color: var(--muted); white-space: nowrap; margin-left: 8px; }
-  .modal-total { display: flex; justify-content: space-between; padding: 14px 0 0; font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 2px; }
-  .modal-footer { padding: 16px 20px; border-top: 1px solid var(--border); text-align: center; }
-  .modal-footer .mp-note { margin-bottom: 12px; }
-  .copy-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 4px; padding: 12px; cursor: pointer; transition: all 0.2s; }
-  .copy-btn:hover { opacity: 0.85; }
+  .modal-header { padding: 16px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+  .modal-title { font-family: 'Bebas Neue', sans-serif; font-size: 1.2rem; letter-spacing: 4px; }
+  .modal-body { padding: 12px 18px; overflow-y: auto; flex: 1; -webkit-overflow-scrolling: touch; }
+  .modal-item { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; padding: 8px 0; border-bottom: 1px solid var(--border); font-family: 'Barlow Condensed', sans-serif; font-size: 0.9rem; }
+  .modal-item-name { color: var(--white); flex: 1; }
+  .modal-item-price { color: var(--muted); white-space: nowrap; }
+  .modal-total { display: flex; justify-content: space-between; padding: 12px 0 0; font-family: 'Bebas Neue', sans-serif; font-size: 1.1rem; letter-spacing: 2px; }
+  .modal-footer { padding: 14px 18px; border-top: 1px solid var(--border); text-align: center; flex-shrink: 0; }
+  .modal-footer .mp-note { margin-bottom: 10px; }
+  .copy-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 3px; padding: 13px; cursor: pointer; transition: all 0.2s; }
   .copy-btn.copied { background: #2a2a2a; color: var(--white); }
 
-  footer { padding: 40px 2rem; border-top: 1px solid var(--border); text-align: center; }
-  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2.5rem; letter-spacing: 10px; color: var(--muted); margin-bottom: 12px; }
+  footer { padding: 32px 1rem; border-top: 1px solid var(--border); text-align: center; }
+  .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 8px; color: var(--muted); margin-bottom: 10px; }
   .footer-ig { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
   .footer-ig a { color: var(--white); text-decoration: none; }
-  .notif { position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--white); color: var(--black); font-family: 'Barlow Condensed', sans-serif; font-size: 0.85rem; letter-spacing: 2px; padding: 12px 24px; z-index: 400; transition: transform 0.3s ease; text-transform: uppercase; }
+
+  .notif { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--white); color: var(--black); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 2px; padding: 10px 20px; z-index: 400; transition: transform 0.3s ease; text-transform: uppercase; white-space: nowrap; }
   .notif.show { transform: translateX(-50%) translateY(0); }
+
   .carousel-wrap { position: relative; overflow: hidden; }
-  .car-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); border: 1px solid var(--border); color: var(--white); font-size: 1rem; width: 32px; height: 32px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: background 0.2s; z-index: 2; }
-  .car-btn:hover { background: rgba(0,0,0,0.9); }
-  .car-prev { left: 8px; }
-  .car-next { right: 8px; }
-  .dots { position: absolute; bottom: 8px; left: 50%; transform: translateX(-50%); display: flex; gap: 5px; z-index: 2; }
-  .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: background 0.2s; }
+  .car-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); border: none; color: var(--white); font-size: 1rem; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; }
+  .car-prev { left: 4px; }
+  .car-next { right: 4px; }
+  .dots { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 2; }
+  .dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: background 0.2s; }
   .dot-active { background: var(--white); }
-  @media (max-width: 600px) { .hero h1 { font-size: 3.5rem; } .cart-sidebar { width: 100vw; } .modal { width: 95%; } }
 </style>
 </head>
 <body>
@@ -156,7 +163,7 @@
 <footer>
   <div class="footer-logo">CRZ</div>
   <p class="footer-ig">Instagram: <a href="https://instagram.com/cruzaderz.oficial" target="_blank">@cruzaderz.oficial</a></p>
-<p style="margin-top:12px;font-family:'Barlow',sans-serif;font-size:0.7rem;color:#333;">© 2025 Cruzaderz. Todos los derechos reservados.</p>
+  <p style="margin-top:12px;font-family:'Barlow',sans-serif;font-size:0.7rem;color:#333;">© 2025 Cruzaderz. Todos los derechos reservados.</p>
 </footer>
 
 <script>
@@ -195,7 +202,7 @@ function renderProducts(filter) {
     const multi = p.imgs.length > 1;
     const dots = p.imgs.map((_, i) => `<span class="dot dot-${p.id} ${i===0?'dot-active':''}"></span>`).join('');
     return `<div class="product-card">
-      <span class="badge-crz ${p.propio?'badge-propio':''}">${p.propio?'CRUZADERZ':'REVENTA'}</span>
+      <span class="badge-crz ${p.propio?'badge-propio':''}">${p.propio?'CRZ':'REVENTA'}</span>
       <div class="carousel-wrap">
         <img class="product-img" id="img-${p.id}" src="${p.imgs[0]}" alt="${p.name}" loading="lazy"/>
         ${multi?`<button class="car-btn car-prev" onclick="prevImg(${p.id},${p.imgs.length},event)">&#8592;</button>
@@ -207,7 +214,7 @@ function renderProducts(filter) {
         <div class="product-name">${p.name}</div>
         <div class="product-price">${formatPrice(p.price)}</div>
         <div class="product-talle">Talle: ${p.talle}</div>
-        <button class="add-btn" onclick="addToCart(${p.id})">AGREGAR AL CARRITO</button>
+        <button class="add-btn" onclick="addToCart(${p.id})">AGREGAR</button>
       </div>
     </div>`;
   }).join('');
