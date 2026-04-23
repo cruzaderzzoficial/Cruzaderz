@@ -11,27 +11,82 @@
   :root { --black: #080808; --white: #f5f0e8; --red: #cc0000; --gray: #1a1a1a; --muted: #555; --border: #222; }
   html, body { width: 100%; overflow-x: hidden; }
   body { background: var(--black); color: var(--white); font-family: 'Barlow', sans-serif; min-height: 100vh; }
-
   header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,8,8,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
   .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 4px; color: var(--white); text-decoration: none; }
   .logo span { color: var(--red); }
   .cart-btn { background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 2px; padding: 7px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.2s; white-space: nowrap; }
   .cart-btn:hover { border-color: var(--white); }
   .cart-count { background: var(--red); color: #fff; font-size: 0.65rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
-
   .hero { margin-top: 56px; padding: 40px 1rem 30px; text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
   .hero::before { content: 'CRZ'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Bebas Neue', sans-serif; font-size: 30vw; color: rgba(255,255,255,0.02); pointer-events: none; letter-spacing: 10px; }
   .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 12vw, 6rem); letter-spacing: 6px; line-height: 1; margin-bottom: 8px; }
   .hero p { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
 
+  /* COUNTDOWN */
+  .countdown-banner {
+    background: #0d0d0d;
+    border-bottom: 1px solid var(--border);
+    padding: 20px 1rem;
+    text-align: center;
+  }
+  .countdown-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .countdown-label span { color: var(--red); }
+  .countdown-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  .countdown-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .countdown-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    line-height: 1;
+    color: var(--white);
+    background: var(--gray);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    min-width: 70px;
+    text-align: center;
+  }
+  .countdown-unit {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .countdown-finished {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    color: var(--red);
+  }
+  .countdown-ig {
+    margin-top: 10px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .countdown-ig a { color: var(--white); text-decoration: none; }
+
   .filters { display: flex; gap: 8px; padding: 16px 1rem; border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .filters::-webkit-scrollbar { display: none; }
   .filter-btn { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 2px; padding: 5px 12px; cursor: pointer; white-space: nowrap; transition: all 0.2s; text-transform: uppercase; flex-shrink: 0; }
   .filter-btn:hover, .filter-btn.active { border-color: var(--white); color: var(--white); }
-
   .grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1px; background: var(--border); }
   @media (min-width: 600px) { .grid { grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); } }
-
   .product-card { background: var(--black); cursor: pointer; transition: background 0.2s; position: relative; overflow: hidden; }
   .product-card:hover { background: #0f0f0f; }
   .product-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top; display: block; filter: grayscale(15%); transition: filter 0.3s, transform 0.4s; }
@@ -45,7 +100,6 @@
   .add-btn:active { background: var(--white); color: var(--black); border-color: var(--white); }
   .badge-crz { position: absolute; top: 8px; right: 8px; background: var(--black); border: 1px solid var(--border); font-family: 'Bebas Neue', sans-serif; font-size: 0.65rem; letter-spacing: 1px; padding: 2px 6px; color: var(--muted); z-index: 2; }
   .badge-propio { background: var(--red); border-color: var(--red); color: #fff; }
-
   .cart-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; }
   .cart-overlay.open { display: block; }
   .cart-sidebar { position: fixed; top: 0; right: -100vw; width: 100vw; max-width: 400px; height: 100vh; background: var(--gray); border-left: 1px solid var(--border); z-index: 201; transition: right 0.3s ease; display: flex; flex-direction: column; }
@@ -70,7 +124,6 @@
   .checkout-btn:active { opacity: 0.85; }
   .mp-note { font-family: 'Barlow', sans-serif; font-size: 0.72rem; color: var(--muted); text-align: center; line-height: 1.5; }
   .empty-cart { text-align: center; padding: 60px 0; color: var(--muted); font-family: 'Barlow Condensed', sans-serif; letter-spacing: 2px; font-size: 0.85rem; text-transform: uppercase; }
-
   .modal-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 300; }
   .modal-overlay.open { display: block; }
   .modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%) scale(0.95); width: 92%; max-width: 420px; max-height: 85vh; background: var(--gray); border: 1px solid var(--border); z-index: 301; display: flex; flex-direction: column; opacity: 0; transition: all 0.25s ease; pointer-events: none; }
@@ -86,15 +139,12 @@
   .modal-footer .mp-note { margin-bottom: 10px; }
   .copy-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 3px; padding: 13px; cursor: pointer; transition: all 0.2s; }
   .copy-btn.copied { background: #2a2a2a; color: var(--white); }
-
   footer { padding: 32px 1rem; border-top: 1px solid var(--border); text-align: center; }
   .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 8px; color: var(--muted); margin-bottom: 10px; }
   .footer-ig { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
   .footer-ig a { color: var(--white); text-decoration: none; }
-
   .notif { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%) translateY(100px); background: var(--white); color: var(--black); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 2px; padding: 10px 20px; z-index: 400; transition: transform 0.3s ease; text-transform: uppercase; white-space: nowrap; }
   .notif.show { transform: translateX(-50%) translateY(0); }
-
   .carousel-wrap { position: relative; overflow: hidden; }
   .car-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.6); border: none; color: var(--white); font-size: 1rem; width: 30px; height: 30px; cursor: pointer; display: flex; align-items: center; justify-content: center; z-index: 2; }
   .car-prev { left: 4px; }
@@ -117,6 +167,30 @@
   <h1>CATÁLOGO</h1>
   <p>Streetwear — Envíos a todo el país</p>
 </section>
+
+<!-- COUNTDOWN SORTEO -->
+<div class="countdown-banner">
+  <div class="countdown-label">🎁 SORTEO — <span>PRENDA GRATIS</span> — cierra el sábado 20hs</div>
+  <div class="countdown-boxes" id="countdownBoxes">
+    <div class="countdown-box">
+      <div class="countdown-num" id="cdDias">--</div>
+      <div class="countdown-unit">días</div>
+    </div>
+    <div class="countdown-box">
+      <div class="countdown-num" id="cdHoras">--</div>
+      <div class="countdown-unit">horas</div>
+    </div>
+    <div class="countdown-box">
+      <div class="countdown-num" id="cdMins">--</div>
+      <div class="countdown-unit">min</div>
+    </div>
+    <div class="countdown-box">
+      <div class="countdown-num" id="cdSegs">--</div>
+      <div class="countdown-unit">seg</div>
+    </div>
+  </div>
+  <p class="countdown-ig">Participá en <a href="https://instagram.com/cruzaderz.oficial" target="_blank">@cruzaderz.oficial</a></p>
+</div>
 
 <div class="filters">
   <button class="filter-btn active" onclick="filterProducts('todos', this)">TODOS</button>
@@ -167,6 +241,28 @@
 </footer>
 
 <script>
+// COUNTDOWN
+const endDate = new Date('2025-04-26T20:00:00-03:00');
+
+function updateCountdown() {
+  const now = new Date();
+  const diff = endDate - now;
+  if (diff <= 0) {
+    document.getElementById('countdownBoxes').innerHTML = '<div class="countdown-finished">SORTEO CERRADO</div>';
+    return;
+  }
+  const dias = Math.floor(diff / (1000*60*60*24));
+  const horas = Math.floor((diff % (1000*60*60*24)) / (1000*60*60));
+  const mins = Math.floor((diff % (1000*60*60)) / (1000*60));
+  const segs = Math.floor((diff % (1000*60)) / 1000);
+  document.getElementById('cdDias').textContent = String(dias).padStart(2,'0');
+  document.getElementById('cdHoras').textContent = String(horas).padStart(2,'0');
+  document.getElementById('cdMins').textContent = String(mins).padStart(2,'0');
+  document.getElementById('cdSegs').textContent = String(segs).padStart(2,'0');
+}
+updateCountdown();
+setInterval(updateCountdown, 1000);
+
 const products = [
   { id:1, name:"Remera Tripside", category:"remera", price:26999, talle:"M / L", imgs:["remera tripside.jpeg","remera tripside 2.jpeg","remera tripside 3.jpeg"], propio:false },
   { id:2, name:"Chomba Skyline", category:"chomba", price:25999, talle:"L", imgs:["chomba skyline 1.jpeg","chomba skyline 2.jpeg","chomba skyline 3.jpeg"], propio:false },
@@ -181,19 +277,15 @@ const products = [
 ];
 
 let cart = [], currentFilter = 'todos', carouselIndex = {}, resumenTexto = '';
-
 function formatPrice(p) { return '$' + p.toLocaleString('es-AR'); }
-
 function prevImg(id, total, e) { e.stopPropagation(); carouselIndex[id] = (carouselIndex[id] - 1 + total) % total; updateCarousel(id); }
 function nextImg(id, total, e) { e.stopPropagation(); carouselIndex[id] = (carouselIndex[id] + 1) % total; updateCarousel(id); }
-
 function updateCarousel(id) {
   const img = document.getElementById('img-' + id);
   const p = products.find(x => x.id === id);
   img.src = p.imgs[carouselIndex[id]];
   document.querySelectorAll('.dot-' + id).forEach((d, i) => d.classList.toggle('dot-active', i === carouselIndex[id]));
 }
-
 function renderProducts(filter) {
   const grid = document.getElementById('productGrid');
   const filtered = filter === 'todos' ? products : products.filter(p => p.category === filter);
@@ -219,14 +311,12 @@ function renderProducts(filter) {
     </div>`;
   }).join('');
 }
-
 function filterProducts(cat, btn) {
   currentFilter = cat;
   document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
   btn.classList.add('active');
   renderProducts(cat);
 }
-
 function addToCart(id) {
   const p = products.find(x => x.id === id);
   const ex = cart.find(x => x.id === id);
@@ -234,9 +324,7 @@ function addToCart(id) {
   updateCartUI();
   showNotif(`${p.name} agregado`);
 }
-
 function removeFromCart(id) { cart = cart.filter(x => x.id !== id); updateCartUI(); }
-
 function updateCartUI() {
   document.getElementById('cartCount').textContent = cart.reduce((a,x) => a+x.qty, 0);
   document.getElementById('cartTotal').textContent = formatPrice(cart.reduce((a,x) => a+x.price*x.qty, 0));
@@ -252,12 +340,10 @@ function updateCartUI() {
     <button class="cart-item-remove" onclick="removeFromCart(${x.id})">✕</button>
   </div>`).join('');
 }
-
 function toggleCart() {
   document.getElementById('cartOverlay').classList.toggle('open');
   document.getElementById('cartSidebar').classList.toggle('open');
 }
-
 function checkout() {
   if (!cart.length) { showNotif('Tu carrito está vacío'); return; }
   const total = cart.reduce((a,x) => a+x.price*x.qty, 0);
@@ -277,12 +363,10 @@ function checkout() {
   document.getElementById('modal').classList.add('open');
   toggleCart();
 }
-
 function closeModal() {
   document.getElementById('modalOverlay').classList.remove('open');
   document.getElementById('modal').classList.remove('open');
 }
-
 function copyResumen() {
   navigator.clipboard.writeText(resumenTexto).then(() => {
     const btn = document.getElementById('copyBtn');
@@ -291,14 +375,12 @@ function copyResumen() {
     setTimeout(() => { btn.textContent = 'COPIAR PEDIDO'; btn.classList.remove('copied'); }, 2500);
   });
 }
-
 function showNotif(msg) {
   const el = document.getElementById('notif');
   el.textContent = msg;
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2000);
 }
-
 renderProducts('todos');
 updateCartUI();
 </script>
