@@ -22,7 +22,64 @@
   .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 12vw, 6rem); letter-spacing: 6px; line-height: 1; margin-bottom: 8px; }
   .hero p { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
 
- 
+  /* COUNTDOWN */
+  .countdown-banner {
+    background: #0d0d0d;
+    border-bottom: 1px solid var(--border);
+    padding: 20px 1rem;
+    text-align: center;
+  }
+  .countdown-label {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.75rem;
+    letter-spacing: 4px;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .countdown-label span { color: var(--red); }
+  .countdown-boxes {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+  }
+  .countdown-box {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+  }
+  .countdown-num {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: clamp(2rem, 8vw, 3.5rem);
+    line-height: 1;
+    color: var(--white);
+    background: var(--gray);
+    border: 1px solid var(--border);
+    padding: 8px 16px;
+    min-width: 70px;
+    text-align: center;
+  }
+  .countdown-unit {
+    font-family: 'Barlow Condensed', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    color: var(--muted);
+    text-transform: uppercase;
+  }
+  .countdown-finished {
+    font-family: 'Bebas Neue', sans-serif;
+    font-size: 1.5rem;
+    letter-spacing: 4px;
+    color: var(--red);
+  }
+  .countdown-ig {
+    margin-top: 10px;
+    font-family: 'Barlow', sans-serif;
+    font-size: 0.72rem;
+    color: var(--muted);
+  }
+  .countdown-ig a { color: var(--white); text-decoration: none; }
 
   .filters { display: flex; gap: 8px; padding: 16px 1rem; border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .filters::-webkit-scrollbar { display: none; }
@@ -111,6 +168,29 @@
   <p>Streetwear — Envíos a todo el país</p>
 </section>
 
+<!-- COUNTDOWN SORTEO -->
+<div class="countdown-banner">
+  <div class="countdown-label">🎁 SORTEO — <span>PRENDA GRATIS</span> — cierra el sábado 20hs</div>
+  <div class="countdown-boxes" id="countdownBoxes">
+    <div class="countdown-box">
+      <div class="countdown-num" id="cdDias">--</div>
+      <div class="countdown-unit">días</div>
+    </div>
+    <div class="countdown-box">
+      <div class="countdown-num" id="cdHoras">--</div>
+      <div class="countdown-unit">horas</div>
+    </div>
+    <div class="countdown-box">
+      <div class="countdown-num" id="cdMins">--</div>
+      <div class="countdown-unit">min</div>
+    </div>
+    <div class="countdown-box">
+      <div class="countdown-num" id="cdSegs">--</div>
+      <div class="countdown-unit">seg</div>
+    </div>
+  </div>
+  <p class="countdown-ig">Participá en <a href="https://instagram.com/cruzaderz.oficial" target="_blank">@cruzaderz.oficial</a></p>
+</div>
 
 <div class="filters">
   <button class="filter-btn active" onclick="filterProducts('todos', this)">TODOS</button>
@@ -162,7 +242,7 @@
 
 <script>
 // COUNTDOWN
-const endDate = new Date('2026-04-25T20:00:00-03:00');
+const endDate = new Date('2025-04-26T20:00:00-03:00');
 
 function updateCountdown() {
   const now = new Date();
