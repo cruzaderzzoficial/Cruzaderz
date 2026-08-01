@@ -22,8 +22,6 @@
   .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 12vw, 6rem); letter-spacing: 6px; line-height: 1; margin-bottom: 8px; }
   .hero p { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
 
-
-
   .filters { display: flex; gap: 8px; padding: 16px 1rem; border-bottom: 1px solid var(--border); overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
   .filters::-webkit-scrollbar { display: none; }
   .filter-btn { background: none; border: 1px solid var(--border); color: var(--muted); font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 2px; padding: 5px 12px; cursor: pointer; white-space: nowrap; transition: all 0.2s; text-transform: uppercase; flex-shrink: 0; }
@@ -34,6 +32,7 @@
   .product-card:hover { background: #0f0f0f; }
   .product-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top; display: block; filter: grayscale(15%); transition: filter 0.3s, transform 0.4s; }
   .product-card:hover .product-img { filter: grayscale(0%); transform: scale(1.02); }
+  .product-card.agotado .product-img { filter: grayscale(90%); opacity: 0.5; }
   .product-info { padding: 10px; border-top: 1px solid var(--border); }
   .product-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.6rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 2px; }
   .product-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.05rem; letter-spacing: 1px; margin-bottom: 4px; line-height: 1.1; }
@@ -41,8 +40,10 @@
   .product-talle { font-family: 'Barlow Condensed', sans-serif; font-size: 0.65rem; color: var(--muted); letter-spacing: 1px; margin-top: 2px; }
   .add-btn { width: 100%; margin-top: 8px; background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; letter-spacing: 2px; padding: 8px 4px; cursor: pointer; text-transform: uppercase; transition: all 0.2s; }
   .add-btn:active { background: var(--white); color: var(--black); border-color: var(--white); }
+  .add-btn.disabled { color: var(--muted); border-color: var(--border); cursor: not-allowed; pointer-events: none; }
   .badge-crz { position: absolute; top: 8px; right: 8px; background: var(--black); border: 1px solid var(--border); font-family: 'Bebas Neue', sans-serif; font-size: 0.65rem; letter-spacing: 1px; padding: 2px 6px; color: var(--muted); z-index: 2; }
   .badge-propio { background: var(--red); border-color: var(--red); color: #fff; }
+  .badge-agotado { position: absolute; top: 8px; left: 8px; background: var(--red); border: 1px solid var(--red); font-family: 'Bebas Neue', sans-serif; font-size: 0.7rem; letter-spacing: 2px; padding: 3px 8px; color: #fff; z-index: 3; }
   .cart-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 200; }
   .cart-overlay.open { display: block; }
   .cart-sidebar { position: fixed; top: 0; right: -100vw; width: 100vw; max-width: 400px; height: 100vh; background: var(--gray); border-left: 1px solid var(--border); z-index: 201; transition: right 0.3s ease; display: flex; flex-direction: column; }
@@ -111,14 +112,14 @@
   <p>Streetwear — Envíos a todo el país</p>
 </section>
 
-
-
 <div class="filters">
   <button class="filter-btn active" onclick="filterProducts('todos', this)">TODOS</button>
+  <button class="filter-btn" onclick="filterProducts('baggy', this)">BAGGYS</button>
+  <button class="filter-btn" onclick="filterProducts('buzo', this)">BUZOS</button>
+  <button class="filter-btn" onclick="filterProducts('campera', this)">CAMPERAS</button>
   <button class="filter-btn" onclick="filterProducts('remera', this)">REMERAS</button>
   <button class="filter-btn" onclick="filterProducts('chomba', this)">CHOMBAS</button>
   <button class="filter-btn" onclick="filterProducts('jean', this)">JEANS</button>
-  <button class="filter-btn" onclick="filterProducts('buzo', this)">BUZOS</button>
 </div>
 
 <div class="grid" id="productGrid"></div>
@@ -163,17 +164,23 @@
 
 <script>
 
-
 const products = [
-  { id:1, name:"Remera Tripside", category:"remera", price:26999, talle:"M / L", imgs:["remera tripside.jpeg","remera tripside 2.jpeg","remera tripside 3.jpeg"], propio:false },
-  { id:2, name:"Chomba Skyline", category:"chomba", price:25999, talle:"L", imgs:["chomba skyline 1.jpeg","chomba skyline 2.jpeg","chomba skyline 3.jpeg"], propio:false },
-  { id:3, name:"Chomba Duo", category:"chomba", price:25999, talle:"L", imgs:["chomba duo 1.jpeg","chomba duo 2.jpeg"], propio:false },
-  { id:4, name:"Chomba Bull", category:"chomba", price:26999, talle:"L", imgs:["chomba bull 1.jpeg","chomba bull 2.jpeg","chomba bull 3.jpeg"], propio:false },
-  { id:5, name:"Chomba Triple Double", category:"chomba", price:26999, talle:"XL", imgs:["triple_double_1.PNG","triple_double_2.PNG","triple_double_3.PNG"], propio:false },
-  { id:6, name:"Remera Street Marrón", category:"remera", price:28999, talle:"L", imgs:["remera street marron 3.jpeg"], propio:false },
-  { id:7, name:"Remera Perla", category:"remera", price:28999, talle:"XL", imgs:["perla 1.PNG","perla2.PNG","perla3.PNG"], propio:false },
-  { id:9, name:"Jean Baggy Gravity", category:"jean", price:42999, talle:"44 / 46", imgs:["baggy gravity 1.jpeg","baggy gravity 2.jpeg","baggy gravity 3.jpeg"], propio:false },
-  { id:10, name:"Buzo Cruzaderz", category:"buzo", price:40000, talle:"L mujer / M hombre", imgs:["buzo cruzaderz 1.png","buzo cruzadez 2.png"], propio:true }
+  { id:1, name:"Remera Tripside", category:"remera", price:26999, talle:"M / L", imgs:["remera tripside.jpeg","remera tripside 2.jpeg","remera tripside 3.jpeg"], propio:false, agotado:false },
+  { id:2, name:"Chomba Skyline", category:"chomba", price:25999, talle:"L", imgs:["chomba skyline 1.jpeg","chomba skyline 2.jpeg","chomba skyline 3.jpeg"], propio:false, agotado:false },
+  { id:3, name:"Chomba Duo", category:"chomba", price:25999, talle:"L", imgs:["chomba duo 1.jpeg","chomba duo 2.jpeg"], propio:false, agotado:false },
+  { id:4, name:"Chomba Bull", category:"chomba", price:26999, talle:"L", imgs:["chomba bull 1.jpeg","chomba bull 2.jpeg","chomba bull 3.jpeg"], propio:false, agotado:false },
+  { id:5, name:"Chomba Triple Double", category:"chomba", price:26999, talle:"XL", imgs:["triple_double_1.PNG","triple_double_2.PNG","triple_double_3.PNG"], propio:false, agotado:false },
+  { id:6, name:"Remera Street Marrón", category:"remera", price:28999, talle:"L", imgs:["remera street marron 3.jpeg"], propio:false, agotado:false },
+  { id:7, name:"Remera Perla", category:"remera", price:28999, talle:"XL", imgs:["perla 1.PNG","perla2.PNG","perla3.PNG"], propio:false, agotado:false },
+  { id:9, name:"Jean Baggy Gravity", category:"jean", price:42999, talle:"44 / 46", imgs:["baggy gravity 1.jpeg","baggy gravity 2.jpeg","baggy gravity 3.jpeg"], propio:false, agotado:false },
+  { id:10, name:"Buzo Cruzaderz", category:"buzo", price:40000, talle:"L mujer / M hombre", imgs:["buzo cruzaderz 1.png","buzo cruzadez 2.png"], propio:true, agotado:false },
+
+  { id:11, name:"Jogger Baggy Clásico Gris", category:"baggy", price:50000, talle:"M / L / XL", imgs:["baggy clasico gris.jpeg"], propio:false, agotado:false },
+  { id:12, name:"Jogger Baggy Clásico Negro", category:"baggy", price:50000, talle:"M / L / XL", imgs:["baggy clasico negro.jpeg","baggy clasico negro 2.jpeg"], propio:false, agotado:false },
+  { id:13, name:"Jogger Baggy Eyes Cruz (Diseño)", category:"baggy", price:45000, talle:"M", imgs:["baggy diseño1.jpeg","baggy diseño2.jpeg"], propio:false, agotado:true },
+  { id:14, name:"Buzo Cruz Stras Luigi", category:"buzo", price:45000, talle:"M", imgs:["buzo 1.jpeg","buzo 2.jpeg","buzo 3.jpeg"], propio:false, agotado:false },
+  { id:15, name:"Campera Gaby Classic", category:"campera", price:50000, talle:"M / L", imgs:["campera frente.jpeg","campera piso.jpeg"], propio:false, agotado:false },
+  { id:16, name:"Remera Manga Larga Shadow Blanca", category:"remera", price:25000, talle:"Blanco - M", imgs:["las 2 remeras.jpeg"], propio:false, agotado:false }
 ];
 
 let cart = [], currentFilter = 'todos', carouselIndex = {}, resumenTexto = '';
@@ -193,7 +200,8 @@ function renderProducts(filter) {
     carouselIndex[p.id] = carouselIndex[p.id] || 0;
     const multi = p.imgs.length > 1;
     const dots = p.imgs.map((_, i) => `<span class="dot dot-${p.id} ${i===0?'dot-active':''}"></span>`).join('');
-    return `<div class="product-card">
+    return `<div class="product-card ${p.agotado?'agotado':''}">
+      ${p.agotado?'<span class="badge-agotado">AGOTADO</span>':''}
       <span class="badge-crz ${p.propio?'badge-propio':''}">${p.propio?'CRZ':'REVENTA'}</span>
       <div class="carousel-wrap">
         <img class="product-img" id="img-${p.id}" src="${p.imgs[0]}" alt="${p.name}" loading="lazy"/>
@@ -206,7 +214,9 @@ function renderProducts(filter) {
         <div class="product-name">${p.name}</div>
         <div class="product-price">${formatPrice(p.price)}</div>
         <div class="product-talle">Talle: ${p.talle}</div>
-        <button class="add-btn" onclick="addToCart(${p.id})">AGREGAR</button>
+        ${p.agotado
+          ? `<button class="add-btn disabled">AGOTADO</button>`
+          : `<button class="add-btn" onclick="addToCart(${p.id})">AGREGAR</button>`}
       </div>
     </div>`;
   }).join('');
@@ -219,6 +229,7 @@ function filterProducts(cat, btn) {
 }
 function addToCart(id) {
   const p = products.find(x => x.id === id);
+  if (p.agotado) return;
   const ex = cart.find(x => x.id === id);
   if (ex) { ex.qty++; } else { cart.push({...p, qty:1}); }
   updateCartUI();
