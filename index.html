@@ -117,10 +117,9 @@
   .pd-sizes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
   .pd-size-btn { background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 1px; padding: 8px 14px; cursor: pointer; transition: all 0.2s; }
   .pd-size-btn.selected { background: var(--white); color: var(--black); border-color: var(--white); }
-  .pd-qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
-  .pd-qty-btn { width: 34px; height: 34px; background: none; border: 1px solid var(--border); color: var(--white); font-size: 1.1rem; cursor: pointer; }
-  .pd-qty-btn:hover { border-color: var(--white); }
-  .pd-qty-val { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; letter-spacing: 1px; min-width: 20px; text-align: center; }
+  .pd-qty-row { margin-bottom: 24px; }
+  .pd-qty-select { width: 100%; background: var(--black); border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.95rem; letter-spacing: 1px; padding: 12px 14px; cursor: pointer; appearance: none; -webkit-appearance: none; background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='%23f5f0e8'><path d='M5 7l5 5 5-5z'/></svg>"); background-repeat: no-repeat; background-position: right 14px center; background-size: 16px; }
+  .pd-qty-select:focus { outline: none; border-color: var(--white); }
   .pd-add-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; padding: 15px; cursor: pointer; text-transform: uppercase; transition: opacity 0.2s; }
   .pd-add-btn:active { opacity: 0.85; }
   .pd-add-btn.disabled { background: var(--gray); color: var(--muted); cursor: not-allowed; }
@@ -204,9 +203,7 @@
     <div class="pd-sizes" id="pdSizes"></div>
     <div class="pd-section-label">Cantidad</div>
     <div class="pd-qty-row">
-      <button class="pd-qty-btn" onclick="pdChangeQty(-1)">−</button>
-      <span class="pd-qty-val" id="pdQtyVal">1</span>
-      <button class="pd-qty-btn" onclick="pdChangeQty(1)">+</button>
+      <select class="pd-qty-select" id="pdQtySelect" onchange="pdQtyChange(this.value)"></select>
     </div>
     <button class="pd-add-btn" id="pdAddBtn" onclick="pdAddToCart()">Agregar al carrito</button>
   </div>
@@ -378,7 +375,11 @@ function openProductDetail(id) {
   sizesEl.innerHTML = sizes.map(s => `<button class="pd-size-btn" onclick="pdSelectSize(this,'${s.replace(/'/g,"\\'")}')">${s}</button>`).join('');
   if (sizes.length === 1) { pdSelectedSize = sizes[0]; sizesEl.querySelector('.pd-size-btn').classList.add('selected'); }
 
-  document.getElementById('pdQtyVal').textContent = pdQty;
+  const maxQty = (p.stock && p.stock > 0) ? p.stock : 5;
+  const qtySelect = document.getElementById('pdQtySelect');
+  qtySelect.innerHTML = Array.from({length: maxQty}, (_, i) => i+1)
+    .map(n => `<option value="${n}">${n} unidad${n>1?'es':''}</option>`).join('');
+  qtySelect.value = 1;
 
   pdUpdateImage();
   const multi = p.imgs.length > 1;
@@ -405,9 +406,8 @@ function pdSelectSize(btn, size) {
   document.querySelectorAll('.pd-size-btn').forEach(b => b.classList.remove('selected'));
   btn.classList.add('selected');
 }
-function pdChangeQty(delta) {
-  pdQty = Math.max(1, pdQty + delta);
-  document.getElementById('pdQtyVal').textContent = pdQty;
+function pdQtyChange(value) {
+  pdQty = parseInt(value, 10);
 }
 function pdAddToCart() {
   if (pdCurrent.agotado) return;
