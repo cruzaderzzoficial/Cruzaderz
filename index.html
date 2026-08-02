@@ -96,6 +96,34 @@
   .dots { position: absolute; bottom: 6px; left: 50%; transform: translateX(-50%); display: flex; gap: 4px; z-index: 2; }
   .dot { width: 5px; height: 5px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: background 0.2s; }
   .dot-active { background: var(--white); }
+
+  .pd-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 500; }
+  .pd-overlay.open { display: block; }
+  .pd-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: var(--black); z-index: 501; display: flex; flex-direction: column; transform: translateY(100%); transition: transform 0.3s ease; overflow-y: auto; }
+  .pd-modal.open { transform: translateY(0); }
+  @media (min-width: 700px) { .pd-modal { top: 50%; left: 50%; right: auto; bottom: auto; transform: translate(-50%,-45%); width: 92%; max-width: 780px; max-height: 88vh; border: 1px solid var(--border); flex-direction: row; } .pd-modal.open { transform: translate(-50%,-50%); } }
+  .pd-close { position: sticky; top: 0; align-self: flex-end; background: rgba(8,8,8,0.9); border: none; color: var(--white); font-size: 1.4rem; cursor: pointer; padding: 12px 16px; z-index: 5; }
+  .pd-imgside { position: relative; }
+  @media (min-width: 700px) { .pd-imgside { width: 50%; flex-shrink: 0; } .pd-close { position: absolute; top: 4px; right: 4px; } }
+  .pd-img { width: 100%; aspect-ratio: 3/4; object-fit: cover; object-position: top; display: block; }
+  .pd-badge-agotado { position: absolute; top: 12px; left: 12px; background: var(--red); font-family: 'Bebas Neue', sans-serif; font-size: 0.8rem; letter-spacing: 2px; padding: 4px 10px; color: #fff; z-index: 3; }
+  .pd-info { padding: 20px; flex: 1; }
+  .pd-tag { font-family: 'Barlow Condensed', sans-serif; font-size: 0.7rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 6px; }
+  .pd-name { font-family: 'Bebas Neue', sans-serif; font-size: 1.8rem; letter-spacing: 1px; line-height: 1.05; margin-bottom: 10px; }
+  .pd-price { font-family: 'Barlow Condensed', sans-serif; font-size: 1.8rem; font-weight: 700; letter-spacing: 1px; margin-bottom: 4px; }
+  .pd-stock-note { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 1px; color: var(--red); text-transform: uppercase; margin-bottom: 16px; }
+  .pd-desc { font-family: 'Barlow', sans-serif; font-size: 0.9rem; color: #bbb; line-height: 1.5; margin-bottom: 20px; }
+  .pd-section-label { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 2px; color: var(--muted); text-transform: uppercase; margin-bottom: 8px; }
+  .pd-sizes { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 20px; }
+  .pd-size-btn { background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 1px; padding: 8px 14px; cursor: pointer; transition: all 0.2s; }
+  .pd-size-btn.selected { background: var(--white); color: var(--black); border-color: var(--white); }
+  .pd-qty-row { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+  .pd-qty-btn { width: 34px; height: 34px; background: none; border: 1px solid var(--border); color: var(--white); font-size: 1.1rem; cursor: pointer; }
+  .pd-qty-btn:hover { border-color: var(--white); }
+  .pd-qty-val { font-family: 'Barlow Condensed', sans-serif; font-size: 1rem; letter-spacing: 1px; min-width: 20px; text-align: center; }
+  .pd-add-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 1rem; letter-spacing: 3px; padding: 15px; cursor: pointer; text-transform: uppercase; transition: opacity 0.2s; }
+  .pd-add-btn:active { opacity: 0.85; }
+  .pd-add-btn.disabled { background: var(--gray); color: var(--muted); cursor: not-allowed; }
 </style>
 </head>
 <body>
@@ -154,6 +182,36 @@
   </div>
 </div>
 
+<div class="pd-overlay" id="pdOverlay" onclick="closeProductDetail()"></div>
+<div class="pd-modal" id="pdModal">
+  <div class="pd-imgside">
+    <button class="pd-close" onclick="closeProductDetail()">✕</button>
+    <div id="pdBadge"></div>
+    <div class="carousel-wrap">
+      <img class="pd-img" id="pdImg" src="" alt=""/>
+      <button class="car-btn car-prev" id="pdPrev" onclick="pdPrevImg(event)">&#8592;</button>
+      <button class="car-btn car-next" id="pdNext" onclick="pdNextImg(event)">&#8594;</button>
+      <div class="dots" id="pdDots"></div>
+    </div>
+  </div>
+  <div class="pd-info">
+    <div class="pd-tag" id="pdTag"></div>
+    <div class="pd-name" id="pdName"></div>
+    <div class="pd-price" id="pdPrice"></div>
+    <div class="pd-stock-note" id="pdStockNote"></div>
+    <div class="pd-desc" id="pdDesc"></div>
+    <div class="pd-section-label">Talle</div>
+    <div class="pd-sizes" id="pdSizes"></div>
+    <div class="pd-section-label">Cantidad</div>
+    <div class="pd-qty-row">
+      <button class="pd-qty-btn" onclick="pdChangeQty(-1)">−</button>
+      <span class="pd-qty-val" id="pdQtyVal">1</span>
+      <button class="pd-qty-btn" onclick="pdChangeQty(1)">+</button>
+    </div>
+    <button class="pd-add-btn" id="pdAddBtn" onclick="pdAddToCart()">Agregar al carrito</button>
+  </div>
+</div>
+
 <div class="notif" id="notif"></div>
 
 <footer>
@@ -165,24 +223,24 @@
 <script>
 
 const products = [
-  { id:1, name:"Remera Tripside", category:"remera", price:26999, talle:"M / L", imgs:["remera tripside.jpeg","remera tripside 2.jpeg","remera tripside 3.jpeg"], propio:false, agotado:false },
-  { id:2, name:"Chomba Skyline", category:"chomba", price:25999, talle:"L", imgs:["chomba skyline 1.jpeg","chomba skyline 2.jpeg","chomba skyline 3.jpeg"], propio:false, agotado:false },
-  { id:3, name:"Chomba Duo", category:"chomba", price:25999, talle:"L", imgs:["chomba duo 1.jpeg","chomba duo 2.jpeg"], propio:false, agotado:false },
-  { id:4, name:"Chomba Bull", category:"chomba", price:26999, talle:"L", imgs:["chomba bull 1.jpeg","chomba bull 2.jpeg","chomba bull 3.jpeg"], propio:false, agotado:false },
-  { id:5, name:"Chomba Triple Double", category:"chomba", price:26999, talle:"XL", imgs:["triple_double_1.PNG","triple_double_2.PNG","triple_double_3.PNG"], propio:false, agotado:false },
-  { id:6, name:"Remera Street Marrón", category:"remera", price:28999, talle:"L", imgs:["remera street marron 3.jpeg"], propio:false, agotado:false },
-  { id:7, name:"Remera Perla", category:"remera", price:28999, talle:"XL", imgs:["perla 1.PNG","perla2.PNG","perla3.PNG"], propio:false, agotado:false },
-  { id:9, name:"Jean Baggy Gravity", category:"jean", price:42999, talle:"44 / 46", imgs:["baggy gravity 1.jpeg","baggy gravity 2.jpeg","baggy gravity 3.jpeg"], propio:false, agotado:false },
-  { id:10, name:"Buzo Cruzaderz", category:"buzo", price:40000, talle:"L mujer / M hombre", imgs:["buzo cruzaderz 1.png","buzo cruzadez 2.png"], propio:true, agotado:false },
+  { id:1, name:"Remera Tripside", category:"remera", price:26999, talle:"M / L", imgs:["remera tripside.jpeg","remera tripside 2.jpeg","remera tripside 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Remera streetwear, corte cómodo, ideal para el día a día." },
+  { id:2, name:"Chomba Skyline", category:"chomba", price:25999, talle:"L", imgs:["chomba skyline 1.jpeg","chomba skyline 2.jpeg","chomba skyline 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Chomba streetwear con diseño propio de la colección." },
+  { id:3, name:"Chomba Duo", category:"chomba", price:25999, talle:"L", imgs:["chomba duo 1.jpeg","chomba duo 2.jpeg"], propio:false, agotado:false, stock:null, desc:"Chomba streetwear con diseño propio de la colección." },
+  { id:4, name:"Chomba Bull", category:"chomba", price:26999, talle:"L", imgs:["chomba bull 1.jpeg","chomba bull 2.jpeg","chomba bull 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Chomba streetwear con diseño propio de la colección." },
+  { id:5, name:"Chomba Triple Double", category:"chomba", price:26999, talle:"XL", imgs:["triple_double_1.PNG","triple_double_2.PNG","triple_double_3.PNG"], propio:false, agotado:false, stock:null, desc:"Chomba streetwear con diseño propio de la colección." },
+  { id:6, name:"Remera Street Marrón", category:"remera", price:28999, talle:"L", imgs:["remera street marron 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Remera streetwear, corte cómodo, ideal para el día a día." },
+  { id:7, name:"Remera Perla", category:"remera", price:28999, talle:"XL", imgs:["perla 1.PNG","perla2.PNG","perla3.PNG"], propio:false, agotado:false, stock:null, desc:"Remera streetwear, corte cómodo, ideal para el día a día." },
+  { id:9, name:"Jean Baggy Gravity", category:"jean", price:42999, talle:"44 / 46", imgs:["baggy gravity 1.jpeg","baggy gravity 2.jpeg","baggy gravity 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Jean baggy corte oversize, streetwear." },
+  { id:10, name:"Buzo Cruzaderz", category:"buzo", price:40000, talle:"L mujer / M hombre", imgs:["buzo cruzaderz 1.png","buzo cruzadez 2.png"], propio:true, agotado:false, stock:null, desc:"Buzo con diseño propio Cruzaderz, estampado DTF." },
 
-  { id:11, name:"Jogger Baggy Clásico Gris", category:"baggy", price:50000, talle:"M / L / XL", imgs:["baggy clasico gris.jpeg"], propio:false, agotado:false },
-  { id:12, name:"Jogger Baggy Clásico Negro", category:"baggy", price:50000, talle:"M / L / XL", imgs:["baggy clasico negro.jpeg","baggy clasico negro 2.jpeg"], propio:false, agotado:false },
-  { id:13, name:"Jogger Baggy Eyes Cruz", category:"baggy", price:45000, talle:"M", imgs:["baggy diseño1.jpeg","baggy diseño2.jpeg"], propio:false, agotado:true },
-  { id:14, name:"Buzo Cruz Stras Luigi", category:"buzo", price:45000, talle:"M", imgs:["buzo 2.jpeg","buzo 1 .jpeg","buzo 3.jpeg"], propio:false, agotado:false },
-  { id:15, name:"Campera Gaby Classic", category:"campera", price:50000, talle:"M / L", imgs:["campera frente.jpeg","campera piso.jpeg"], propio:false, agotado:false },
-  { id:16, name:"Remera Manga Larga Shadow Blanca", category:"remera", price:25000, talle:"Blanco - M", imgs:["las 2 remeras.jpeg"], propio:false, agotado:false },
- { id:17, name:"Jean Baggy Washed", category:"jean", price:42999, talle:"44 / 46", imgs:["baggy washed 1.jpeg","baggy washed 2.jpeg","baggy washed 3.jpeg"], propio:false, agotado:true }
- ];
+  { id:11, name:"Jogger Baggy Clásico Gris", category:"baggy", price:50000, talle:"M / L / XL", imgs:["baggy clasico gris.jpeg"], propio:false, agotado:false, stock:null, desc:"Jogger baggy corte oversize, streetwear. Tela gruesa, cae perfecto." },
+  { id:12, name:"Jogger Baggy Clásico Negro", category:"baggy", price:50000, talle:"M / L / XL", imgs:["baggy clasico negro.jpeg","baggy clasico negro 2.jpeg"], propio:false, agotado:false, stock:1, desc:"Jogger baggy corte oversize, streetwear. Tela gruesa, cae perfecto." },
+  { id:13, name:"Jogger Baggy Eyes Cruz (Diseño)", category:"baggy", price:45000, talle:"M", imgs:["baggy diseño1.jpeg","baggy diseño2.jpeg"], propio:false, agotado:true, stock:0, desc:"Jogger baggy con estampado propio, corte oversize." },
+  { id:14, name:"Buzo Cruz Stras Luigi", category:"buzo", price:45000, talle:"M", imgs:["buzo 1 .jpeg","buzo 2.jpeg","buzo 3.jpeg"], propio:false, agotado:false, stock:2, desc:"Buzo oversize con detalle de strass, corte holgado." },
+  { id:15, name:"Campera Gaby Classic", category:"campera", price:50000, talle:"M / L", imgs:["campera frente.jpeg","campera piso.jpeg"], propio:false, agotado:false, stock:2, desc:"Campera oversize, corte streetwear, calidad premium." },
+  { id:16, name:"Remera Manga Larga Shadow Blanca", category:"remera", price:25000, talle:"Blanco - M", imgs:["las 2 remeras.jpeg"], propio:false, agotado:false, stock:1, desc:"Remera manga larga oversize, diseño Shadow, streetwear básico que combina con todo." },
+  { id:17, name:"Jean Baggy Washed", category:"jean", price:42999, talle:"44 / 46", imgs:["baggy washed 1.jpeg","baggy washed 2.jpeg","baggy washed 3.jpeg"], propio:false, agotado:true, stock:0, desc:"Jean baggy lavado, corte oversize." }
+];
 
 let cart = [], currentFilter = 'todos', carouselIndex = {}, resumenTexto = '';
 function formatPrice(p) { return '$' + p.toLocaleString('es-AR'); }
@@ -201,7 +259,7 @@ function renderProducts(filter) {
     carouselIndex[p.id] = carouselIndex[p.id] || 0;
     const multi = p.imgs.length > 1;
     const dots = p.imgs.map((_, i) => `<span class="dot dot-${p.id} ${i===0?'dot-active':''}"></span>`).join('');
-    return `<div class="product-card ${p.agotado?'agotado':''}">
+    return `<div class="product-card ${p.agotado?'agotado':''}" onclick="openProductDetail(${p.id})">
       ${p.agotado?'<span class="badge-agotado">AGOTADO</span>':''}
       <span class="badge-crz ${p.propio?'badge-propio':''}">${p.propio?'CRZ':'REVENTA'}</span>
       <div class="carousel-wrap">
@@ -216,8 +274,8 @@ function renderProducts(filter) {
         <div class="product-price">${formatPrice(p.price)}</div>
         <div class="product-talle">Talle: ${p.talle}</div>
         ${p.agotado
-          ? `<button class="add-btn disabled">AGOTADO</button>`
-          : `<button class="add-btn" onclick="addToCart(${p.id})">AGREGAR</button>`}
+          ? `<button class="add-btn disabled" onclick="event.stopPropagation()">AGOTADO</button>`
+          : `<button class="add-btn" onclick="event.stopPropagation(); addToCart(${p.id})">AGREGAR</button>`}
       </div>
     </div>`;
   }).join('');
@@ -293,6 +351,81 @@ function showNotif(msg) {
   el.classList.add('show');
   setTimeout(() => el.classList.remove('show'), 2000);
 }
+
+let pdCurrent = null, pdImgIndex = 0, pdQty = 1, pdSelectedSize = null;
+
+function openProductDetail(id) {
+  const p = products.find(x => x.id === id);
+  if (!p) return;
+  pdCurrent = p;
+  pdImgIndex = 0;
+  pdQty = 1;
+  pdSelectedSize = null;
+
+  document.getElementById('pdTag').textContent = p.category.toUpperCase();
+  document.getElementById('pdName').textContent = p.name;
+  document.getElementById('pdPrice').textContent = formatPrice(p.price);
+  document.getElementById('pdDesc').textContent = p.desc || '';
+  document.getElementById('pdBadge').innerHTML = p.agotado ? '<span class="pd-badge-agotado">AGOTADO</span>' : '';
+
+  const stockNote = document.getElementById('pdStockNote');
+  if (p.agotado) { stockNote.textContent = 'Sin stock'; }
+  else if (p.stock && p.stock <= 2) { stockNote.textContent = `¡Quedan ${p.stock} unidad${p.stock>1?'es':''}!`; }
+  else { stockNote.textContent = ''; }
+
+  const sizes = p.talle.split('/').map(s => s.trim()).filter(Boolean);
+  const sizesEl = document.getElementById('pdSizes');
+  sizesEl.innerHTML = sizes.map(s => `<button class="pd-size-btn" onclick="pdSelectSize(this,'${s.replace(/'/g,"\\'")}')">${s}</button>`).join('');
+  if (sizes.length === 1) { pdSelectedSize = sizes[0]; sizesEl.querySelector('.pd-size-btn').classList.add('selected'); }
+
+  document.getElementById('pdQtyVal').textContent = pdQty;
+
+  pdUpdateImage();
+  const multi = p.imgs.length > 1;
+  document.getElementById('pdPrev').style.display = multi ? 'flex' : 'none';
+  document.getElementById('pdNext').style.display = multi ? 'flex' : 'none';
+
+  const addBtn = document.getElementById('pdAddBtn');
+  if (p.agotado) { addBtn.textContent = 'Sin stock'; addBtn.classList.add('disabled'); }
+  else { addBtn.textContent = 'Agregar al carrito'; addBtn.classList.remove('disabled'); }
+
+  document.getElementById('pdOverlay').classList.add('open');
+  document.getElementById('pdModal').classList.add('open');
+}
+function pdUpdateImage() {
+  const p = pdCurrent;
+  document.getElementById('pdImg').src = p.imgs[pdImgIndex];
+  const dotsEl = document.getElementById('pdDots');
+  dotsEl.innerHTML = p.imgs.map((_, i) => `<span class="dot ${i===pdImgIndex?'dot-active':''}"></span>`).join('');
+}
+function pdPrevImg(e) { e.stopPropagation(); pdImgIndex = (pdImgIndex - 1 + pdCurrent.imgs.length) % pdCurrent.imgs.length; pdUpdateImage(); }
+function pdNextImg(e) { e.stopPropagation(); pdImgIndex = (pdImgIndex + 1) % pdCurrent.imgs.length; pdUpdateImage(); }
+function pdSelectSize(btn, size) {
+  pdSelectedSize = size;
+  document.querySelectorAll('.pd-size-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+}
+function pdChangeQty(delta) {
+  pdQty = Math.max(1, pdQty + delta);
+  document.getElementById('pdQtyVal').textContent = pdQty;
+}
+function pdAddToCart() {
+  if (pdCurrent.agotado) return;
+  const sizes = pdCurrent.talle.split('/').map(s => s.trim()).filter(Boolean);
+  if (sizes.length > 1 && !pdSelectedSize) { showNotif('Elegí un talle'); return; }
+  const talleFinal = pdSelectedSize || pdCurrent.talle;
+  const ex = cart.find(x => x.id === pdCurrent.id && x.talle === talleFinal);
+  if (ex) { ex.qty += pdQty; }
+  else { cart.push({...pdCurrent, talle: talleFinal, qty: pdQty}); }
+  updateCartUI();
+  showNotif(`${pdCurrent.name} agregado`);
+  closeProductDetail();
+}
+function closeProductDetail() {
+  document.getElementById('pdOverlay').classList.remove('open');
+  document.getElementById('pdModal').classList.remove('open');
+}
+
 renderProducts('todos');
 updateCartUI();
 </script>
