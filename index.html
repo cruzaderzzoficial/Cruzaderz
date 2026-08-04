@@ -11,13 +11,14 @@
   :root { --black: #080808; --white: #f5f0e8; --red: #cc0000; --gray: #1a1a1a; --muted: #555; --border: #222; }
   html, body { width: 100%; overflow-x: hidden; }
   body { background: var(--black); color: var(--white); font-family: 'Barlow', sans-serif; min-height: 100vh; }
-  header { position: fixed; top: 0; left: 0; right: 0; z-index: 100; background: rgba(8,8,8,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
+  .promo-strip { position: fixed; top: 0; left: 0; right: 0; z-index: 101; background: var(--red); color: #fff; text-align: center; padding: 6px 1rem; font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 1px; font-weight: 600; }
+  header { position: fixed; top: 28px; left: 0; right: 0; z-index: 100; background: rgba(8,8,8,0.95); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); padding: 0 1rem; display: flex; align-items: center; justify-content: space-between; height: 56px; }
   .logo { font-family: 'Bebas Neue', sans-serif; font-size: 1.6rem; letter-spacing: 4px; color: var(--white); text-decoration: none; }
   .logo span { color: var(--red); }
   .cart-btn { background: none; border: 1px solid var(--border); color: var(--white); font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 2px; padding: 7px 12px; cursor: pointer; display: flex; align-items: center; gap: 6px; transition: border-color 0.2s; white-space: nowrap; }
   .cart-btn:hover { border-color: var(--white); }
   .cart-count { background: var(--red); color: #fff; font-size: 0.65rem; width: 18px; height: 18px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0; }
-  .hero { margin-top: 56px; padding: 40px 1rem 30px; text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
+  .hero { margin-top: 84px; padding: 40px 1rem 30px; text-align: center; border-bottom: 1px solid var(--border); position: relative; overflow: hidden; }
   .hero::before { content: 'CRZ'; position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); font-family: 'Bebas Neue', sans-serif; font-size: 30vw; color: rgba(255,255,255,0.02); pointer-events: none; letter-spacing: 10px; }
   .hero h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(2.5rem, 12vw, 6rem); letter-spacing: 6px; line-height: 1; margin-bottom: 8px; }
   .hero p { font-family: 'Barlow Condensed', sans-serif; font-size: 0.75rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
@@ -83,6 +84,9 @@
   .modal-footer .mp-note { margin-bottom: 10px; }
   .copy-btn { width: 100%; background: var(--white); color: var(--black); border: none; font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 3px; padding: 13px; cursor: pointer; transition: all 0.2s; }
   .copy-btn.copied { background: #2a2a2a; color: var(--white); }
+  .ig-btn { width: 100%; margin-top: 8px; background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; border: none; font-family: 'Bebas Neue', sans-serif; font-size: 0.95rem; letter-spacing: 3px; padding: 13px; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 8px; transition: opacity 0.2s; }
+  .ig-btn:active { opacity: 0.85; }
+  .ig-btn svg { width: 18px; height: 18px; flex-shrink: 0; }
   footer { padding: 32px 1rem; border-top: 1px solid var(--border); text-align: center; }
   .footer-logo { font-family: 'Bebas Neue', sans-serif; font-size: 2rem; letter-spacing: 8px; color: var(--muted); margin-bottom: 10px; }
   .footer-ig { font-family: 'Barlow Condensed', sans-serif; font-size: 0.8rem; letter-spacing: 3px; color: var(--muted); text-transform: uppercase; }
@@ -126,6 +130,8 @@
 </style>
 </head>
 <body>
+
+<div class="promo-strip">🔥 10% OFF en tu 2da prenda — Promo activa</div>
 
 <header>
   <a class="logo" href="#">CRUZA<span>DERZ</span></a>
@@ -178,6 +184,10 @@
   <div class="modal-footer">
     <p class="mp-note">Copiá tu pedido y mandalo por DM a<br><strong style="color:#f5f0e8">@cruzaderz.oficial</strong> en Instagram.<br>Pagás por Mercado Pago o transferencia.</p>
     <button class="copy-btn" id="copyBtn" onclick="copyResumen()">COPIAR PEDIDO</button>
+    <a class="ig-btn" href="https://instagram.com/cruzaderz.oficial" target="_blank">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg>
+      TERMINAR COMPRA
+    </a>
   </div>
 </div>
 
@@ -220,17 +230,17 @@
 <script>
 
 const products = [
-  { id:1, name:"Remera Tripside", category:"remera", price:26999, talle:"M / L", imgs:["remera tripside.jpeg","remera tripside 2.jpeg","remera tripside 3.jpeg"], propio:false, agotado:false, stock:2, desc:"Remera streetwear, corte cómodo, ideal para el día a día." },
-  { id:2, name:"Chomba Skyline", category:"chomba", price:25999, talle:"L", imgs:["chomba skyline 1.jpeg","chomba skyline 2.jpeg","chomba skyline 3.jpeg"], propio:false, agotado:false, stock:1, desc:"Chomba streetwear con diseño propio de la colección." },
-  { id:3, name:"Chomba Duo", category:"chomba", price:25999, talle:"L", imgs:["chomba duo 1.jpeg","chomba duo 2.jpeg"], propio:false, agotado:false, stock:1, desc:"Chomba streetwear con diseño propio de la colección." },
-  { id:4, name:"Chomba Bull", category:"chomba", price:26999, talle:"L", imgs:["chomba bull 1.jpeg","chomba bull 2.jpeg","chomba bull 3.jpeg"], propio:false, agotado:false, stock:1, desc:"Chomba streetwear con diseño propio de la colección." },
-  { id:5, name:"Chomba Triple Double", category:"chomba", price:26999, talle:"XL", imgs:["triple_double_1.PNG","triple_double_2.PNG","triple_double_3.PNG"], propio:false, agotado:false, stock:1, desc:"Chomba streetwear con diseño propio de la colección." },
-  { id:6, name:"Remera Street Marrón", category:"remera", price:28999, talle:"L", imgs:["remera street marron 3.jpeg"], propio:false, agotado:false, stock:1, desc:"Remera streetwear, corte cómodo, ideal para el día a día." },
-  { id:7, name:"Remera Perla", category:"remera", price:28999, talle:"XL", imgs:["perla 1.PNG","perla2.PNG","perla3.PNG"], propio:false, agotado:false, stock:1, desc:"Remera streetwear, corte cómodo, ideal para el día a día." },
-  { id:9, name:"Jean Baggy Gravity", category:"jean", price:42999, talle:"44 / 46", imgs:["baggy gravity 1.jpeg","baggy gravity 2.jpeg","baggy gravity 3.jpeg"], propio:false, agotado:false, stock:2, desc:"Jean baggy corte oversize, streetwear." },
-  { id:10, name:"Buzo Cruzaderz", category:"buzo", price:40000, talle:"L mujer / M hombre", imgs:["buzo cruzaderz 1.png","buzo cruzadez 2.png"], propio:true, agotado:false, stock:5, desc:"Buzo con diseño propio Cruzaderz, estampado DTF." },
+  { id:1, name:"Remera Tripside", category:"remera", price:26999, talle:"M / L", imgs:["remera tripside.jpeg","remera tripside 2.jpeg","remera tripside 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Remera streetwear, corte cómodo, ideal para el día a día." },
+  { id:2, name:"Chomba Skyline", category:"chomba", price:25999, talle:"L", imgs:["chomba skyline 1.jpeg","chomba skyline 2.jpeg","chomba skyline 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Chomba streetwear con diseño propio de la colección." },
+  { id:3, name:"Chomba Duo", category:"chomba", price:25999, talle:"L", imgs:["chomba duo 1.jpeg","chomba duo 2.jpeg"], propio:false, agotado:false, stock:null, desc:"Chomba streetwear con diseño propio de la colección." },
+  { id:4, name:"Chomba Bull", category:"chomba", price:26999, talle:"L", imgs:["chomba bull 1.jpeg","chomba bull 2.jpeg","chomba bull 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Chomba streetwear con diseño propio de la colección." },
+  { id:5, name:"Chomba Triple Double", category:"chomba", price:26999, talle:"XL", imgs:["triple_double_1.PNG","triple_double_2.PNG","triple_double_3.PNG"], propio:false, agotado:false, stock:null, desc:"Chomba streetwear con diseño propio de la colección." },
+  { id:6, name:"Remera Street Marrón", category:"remera", price:28999, talle:"L", imgs:["remera street marron 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Remera streetwear, corte cómodo, ideal para el día a día." },
+  { id:7, name:"Remera Perla", category:"remera", price:28999, talle:"XL", imgs:["perla 1.PNG","perla2.PNG","perla3.PNG"], propio:false, agotado:false, stock:null, desc:"Remera streetwear, corte cómodo, ideal para el día a día." },
+  { id:9, name:"Jean Baggy Gravity", category:"jean", price:42999, talle:"44 / 46", imgs:["baggy gravity 1.jpeg","baggy gravity 2.jpeg","baggy gravity 3.jpeg"], propio:false, agotado:false, stock:null, desc:"Jean baggy corte oversize, streetwear." },
+  { id:10, name:"Buzo Cruzaderz", category:"buzo", price:40000, talle:"L mujer / M hombre", imgs:["buzo cruzaderz 1.png","buzo cruzadez 2.png"], propio:true, agotado:false, stock:null, desc:"Buzo con diseño propio Cruzaderz, estampado DTF." },
 
-  { id:11, name:"Jogger Baggy Clásico Gris", category:"baggy", price:50000, talle:"M / L / XL", imgs:["baggy clasico gris.jpeg"], propio:false, agotado:false, stock:1, desc:"Jogger baggy corte oversize, streetwear. Tela gruesa, cae perfecto." },
+  { id:11, name:"Jogger Baggy Clásico Gris", category:"baggy", price:50000, talle:"M / L / XL", imgs:["baggy clasico gris.jpeg"], propio:false, agotado:false, stock:null, desc:"Jogger baggy corte oversize, streetwear. Tela gruesa, cae perfecto." },
   { id:12, name:"Jogger Baggy Clásico Negro", category:"baggy", price:50000, talle:"M / L / XL", imgs:["baggy clasico negro.jpeg","baggy clasico negro 2.jpeg"], propio:false, agotado:false, stock:1, desc:"Jogger baggy corte oversize, streetwear. Tela gruesa, cae perfecto." },
   { id:13, name:"Jogger Baggy Eyes Cruz (Diseño)", category:"baggy", price:45000, talle:"M", imgs:["baggy diseño1.jpeg","baggy diseño2.jpeg"], propio:false, agotado:true, stock:0, desc:"Jogger baggy con estampado propio, corte oversize." },
   { id:14, name:"Buzo Cruz Stras Luigi", category:"buzo", price:45000, talle:"M", imgs:["buzo 1 .jpeg","buzo 2.jpeg","buzo 3.jpeg"], propio:false, agotado:false, stock:2, desc:"Buzo oversize con detalle de strass, corte holgado." },
